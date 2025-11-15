@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <string.h>
-// #include "TampilPosAnggaran.c"
-// #include "printposanggaran.h"
+#include <stdlib.h>
+// #include "../../include/posanggaran.h"
 
 #define MAX_STRING 100
 
@@ -16,93 +16,178 @@ typedef struct
     char Status[20];
 } PosAnggaran;
 
-void InputPosAnggaran(PosAnggaran pos[], int length);
+void MenuPos();
+void InputPosAnggaran(PosAnggaran **pos, int *length, int jumlahInput);
+bool ValidasiNamaPos(PosAnggaran pos[], int count, const char *nama);
+bool ValidasiNominalPos(int batasNominal);
 void TampilPosAnggaran(PosAnggaran pos[], int length);
 void PrintPosAnggaran(PosAnggaran pos[], int length);
-int LoadPosAnggaran();
+void LoadPosAnggaran(PosAnggaran **pos, int *count);
+
+int count = 0;
+
+// void MenuPos();
 
 int main()
 {
-    PosAnggaran Pos[2]; // typedef
-
-    // LoadPosAnggaran(Pos);
-
-    // int JumlahData;
-    // scanf("%d", &JumlahData);
-
-    int length = sizeof(Pos) / sizeof(Pos[0]); // panjang array
-
-    printf("========================================= Aplikasi Keuangan Mahasiswa =========================================\n");
-    printf("1. Masukan Pos Anggaran Baru\n");
-    printf("2. Lihat Pos Anggaran\n");
+    PosAnggaran *Pos = NULL;
+    LoadPosAnggaran(&Pos, &count);
 
     int select;
+
     do
     {
+        MenuPos();
+        scanf("%d", &select);
         switch (select)
         {
         case 1:
-            InputPosAnggaran(Pos, length);
+            int jumlahInput;
+            printf("Masukkan berapa data baru: ");
+            scanf("%d", &jumlahInput);
+
+            InputPosAnggaran(&Pos, &count, jumlahInput);
             break;
         case 2:
-
-            TampilPosAnggaran(Pos, length);
+            TampilPosAnggaran(Pos, count);
+            break;
+        case 0:
             break;
 
         default:
+            printf("Pilih menu yang benar!");
             break;
         }
-    } while (select = 0);
-
-    InputPosAnggaran(Pos, length);
-    TampilPosAnggaran(Pos, length);
-    PrintPosAnggaran(Pos, length);
+    } while (select);
 
     return 0;
 }
-void menu()
+
+// Procedure LoadPosAnggaran
+/*	Melakukan read data dari file ke pos anggaran
+    Input	: -
+    Output	: Menampilkan menu dari Pos Anggaran
+*/
+void MenuPos()
 {
-    printf("1. Masukan data baru");
-    printf("2. Tampilkan semua data");
-    printf("0. ");
+    printf("========================================= Aplikasi Keuangan Mahasiswa =========================================\n");
+    printf("1. Masukan data Pos Anggaran baru\n");
+    printf("2. Tampilkan semua data\n");
+    printf("0. Kembali ke menu utama\n");
+    printf("Masukan pilihan menu (0-2): ");
 }
-int LoadPosAnggaran()
+
+// Procedure LoadPosAnggaran
+/*	Melakukan read data dari file ke pos anggaran
+    Input	: PosAnggaran pos[]
+    Output	: Mendapatkan nilai dari file
+*/
+void LoadPosAnggaran(PosAnggaran **pos, int *count)
 {
-    PosAnggaran datapos[100];
-    FILE *file;
-
-    file = fopen("../../data/DataPosAnggaran.txt", "r");
-
-    for (int i = 0; i < 100; i++)
+    FILE *file = fopen("../../data/DataPosAnggaran.txt", "r");
+    if (file == NULL)
     {
-        fscanf(file, "|  %[^|]|  %d", datapos[i].NamaAnggaran, &datapos[i].BatasNominal);
+        printf("File tidak ditemukan, mulai dari data kosong.\n");
+        return;
+    }
 
-        // fprintf(file, "|  %-15s |  %-14d |\n", pos[i].NamaAnggaran, pos[i].BatasNominal);
+    char nama[MAX_STRING];
+    int batas;
+
+    while (fscanf(file, " |%[^|]|%d|", nama, &batas) == 2)
+    {
+        // Tambahkan 1 slot ke array dinamis
+        *pos = realloc(*pos, (*count + 1) * sizeof(PosAnggaran));
+
+        // Masukkan data ke array
+        strcpy((*pos)[*count].NamaAnggaran, nama);
+        (*pos)[*count].BatasNominal = batas;
+
+        (*count)++; // naikkan jumlah data
     }
     fclose(file);
-
-    return datapos;
 }
-void InputPosAnggaran(PosAnggaran pos[], int length)
-{
-    for (int i = 0; i < length; i++)
-    {
-        printf("Masukan nama anggaran : ");
-        scanf("%s", &pos[i].NamaAnggaran);
 
+// Procedure ValidasiNamaPos
+/*	Menginput data pos anggaran ke dalam array struct
+    Input	: PosAnggaran pos[], length
+    Output	: Nama pos anggaran
+              Batas nominal pos anggaran
+*/
+void InputPosAnggaran(PosAnggaran **pos, int *length, int jumlahInput)
+{
+    int oldLength = *length;
+    int newLength = *length + jumlahInput;
+
+    *pos = realloc(*pos, newLength * sizeof(PosAnggaran));
+
+    for (int i = oldLength; i < newLength; i++)
+    {
+        printf("\nData ke-%d\n", i + 1);
+
+        bool isNameValid;
         do
         {
-            printf("Masukan batas nominal : ");
-            scanf("%d", &pos[i].BatasNominal);
-            if (pos[i].BatasNominal <= 0)
-            {
-                printf("Batas nominal tidak boleh negatif dan 0! ulangin input batas nominal!\n");
-            }
+            printf("Masukkan nama anggaran: ");
+            scanf("%s", (*pos)[i].NamaAnggaran);
 
-        } while (pos[i].BatasNominal <= 0);
+            isNameValid = ValidasiNamaPos(*pos, i, (*pos)[i].NamaAnggaran);
+
+        } while (isNameValid);
+
+        bool isNominalValid;
+        do
+        {
+            printf("Masukan batas nominal: ");
+            scanf("%d", &(*pos)[i].BatasNominal);
+
+            isNominalValid = ValidasiNominalPos((*pos)[i].BatasNominal);
+
+        } while (isNominalValid);
     }
+    *length = newLength;
 }
 
+// Fungsi ValidasiNamaPos
+/*	Memeriksa apakah ada nama pos anggaran yang sama
+    Input	: PosAnggaran pos[], count, *nama
+    Output	: True  -> duplikat
+              False -> tidak duplikat
+*/
+bool ValidasiNamaPos(PosAnggaran pos[], int count, const char *nama)
+{
+    for (int i = 0; i < count; i++)
+    {
+        if (strcmp(pos[i].NamaAnggaran, nama) == 0)
+        {
+            printf("Nama anggaran '%s' sudah ada! Masukkan nama lain!\n", pos[i].NamaAnggaran);
+            return true; // duplikat ditemukan
+        }
+    }
+    return false;
+}
+
+// Fungsi ValidasiNominalPos
+/*	Memeriksa apakah ada nama pos anggaran yang sama
+    Input	: PosAnggaran pos[], count, *nama
+    Output	: True  -> batas nominal <= 0
+              False -> batas nominal tidak <= 0
+*/
+bool ValidasiNominalPos(int batasNominal)
+{
+    if (batasNominal <= 0)
+    {
+        printf("Batas nominal tidak boleh negatif dan 0! Ulangin input batas nominal!\n");
+        return true; // batas <= 0
+    }
+    return false;
+}
+
+// Procedure TampilPosAnggaran
+/*	Menampilkan data pos anggaran ke terminal
+    Input	: PosAnggaran pos[], length
+    Output	: Daftar data Pos Anggaran
+*/
 void TampilPosAnggaran(PosAnggaran pos[], int length)
 {
     printf("_____________________________________________\n");
@@ -118,6 +203,11 @@ void TampilPosAnggaran(PosAnggaran pos[], int length)
     printf("|______|__________________|_________________|\n");
 }
 
+// Procedure TampilPosAnggaran
+/*	Melakukan write data pos anggaran ke dalam file DataPosAnggaran.txt di folder /data
+    Input	: PosAnggaran pos[], length
+    Output	: Daftar data Pos Anggaran
+*/
 void PrintPosAnggaran(PosAnggaran pos[], int length)
 {
     FILE *file;
@@ -126,52 +216,8 @@ void PrintPosAnggaran(PosAnggaran pos[], int length)
 
     for (int i = 0; i < length; i++)
     {
-        fprintf(file, "|  %-15s |  %-14d |\n", pos[i].NamaAnggaran, pos[i].BatasNominal);
+        // fprintf(file, "|  %-15s |  %-14d |\n", pos[i].NamaAnggaran, pos[i].BatasNominal);
+        fprintf(file, "|%s|%d|\n", pos[i].NamaAnggaran, pos[i].BatasNominal);
     }
     fclose(file);
 }
-
-// ValidasiTransaksi(char jenis[], int nominal, char tanggal[],
-//                   char NamaPos[], PosAnggaran pos[], int JumlahPos)
-// {
-//     int valid = 1;
-
-//     // Validasi jenis transaksi
-//     if (strcasecmp(jenis, "Pemasukan") != 0 && strcasecmp(jenis, "Pengeluaran") != 0)
-//     {
-//         printf("Jenis transaksi harus 'Pemasukan' atau 'Pengeluaran'\n");
-//         valid = 0;
-//     }
-
-//     // Validasi nominal
-//     if (nominal <= 0)
-//     {
-//         printf("Nominal harus lebih dari 0\n");
-//         valid = 0;
-//     }
-
-//     // Validasi tanggal
-//     if (strlen(tanggal) == 0)
-//     {
-//         printf("Tanggal tidak boleh kosong\n");
-//         valid = 0;
-//     }
-
-//     // Validasi pos anggaran
-//     int ditemukan = 0;
-//     int i;
-//     for (i = 0; i < JumlahPos; i++)
-//     {
-//         if (strcasecmp(NamaPos, pos[i].NamaAnggaran) == 0)
-//         {
-//             ditemukan = 1;
-//             break;
-//         }
-//     }
-//     if (ditemukan != 0)
-//     {
-//         printf("Pos anggaran '%s' tidak ditemukan\n", NamaPos);
-//         valid = 0;
-//     }
-//     return valid;
-// }

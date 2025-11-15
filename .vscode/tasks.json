@@ -1,0 +1,21 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build C Program",
+            "type": "shell",
+            "command": "gcc",
+            "args": [
+                "src/main.c",
+                "src/posanggaran/posanggaran.c",
+                "src/transaksi/transaksi.c",
+                "-o",
+                "bin/program.exe"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }
+    ]
+}
