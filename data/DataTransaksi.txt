@@ -1,0 +1,10 @@
+ID|Tanggal|Jenis|Kategori|Nominal|Deskripsi
+T001|11/11/2025|Pemasukan|Pemasukan|5000000|Bulanan
+T002|11/11/2025|Pengeluaran|makan|10000|mie ayam
+T003|11/11/2025|pengeluaran|minum|2500|mineral
+T004|21/11/2025|Pengeluaran|makan|22000|Steak
+T005|21/11/2025|Pengeluaran|minum|2500|mineral
+T006|21/11/2025|Pengeluaran|kopi|20000|manjda
+T007|22/11/2025|pengeluaran|bensin|25000|-
+T008|22/11/2025|pengeluaran|belajar|3000|pulpen 
+T008|11/11/2025|pemasukan|Pemasukan|50000|saku celana

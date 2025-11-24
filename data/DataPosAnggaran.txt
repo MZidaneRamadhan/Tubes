@@ -1,2 +1,7 @@
-|makan|100000|
-|minum|80000|
+|NamaPosAnggaran|Nominal|
+|makan|150000|
+|minum|100000|
+|kopi|80000|
+|bensin|100000|
+|belajar|50000|
+|Lain lain|75000|

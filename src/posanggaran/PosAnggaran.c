@@ -2,42 +2,28 @@
 #include <stdbool.h>
 #include <string.h>
 #include <stdlib.h>
-// #include "../../include/posanggaran.h"
+#include "../../include/posanggaran.h"
 
-#define MAX_STRING 100
+PosAnggaran *Pos = NULL;
+int jumlahPos = 0;
 
-typedef struct
+// Procedure MenuPos
+/*	Melakukan read data dari file ke pos anggaran
+    Input	: -
+    Output	: Menampilkan menu Pos Anggaran secara berulang
+*/
+void MenuPosAnggaran()
 {
-    char NamaAnggaran[MAX_STRING];
-    int BatasNominal;
-    int realisasi;
-    int jumlahTransaksi;
-    int SisaAnggaran;
-    char Status[20];
-} PosAnggaran;
-
-void MenuPos();
-void InputPosAnggaran(PosAnggaran **pos, int *length, int jumlahInput);
-bool ValidasiNamaPos(PosAnggaran pos[], int count, const char *nama);
-bool ValidasiNominalPos(int batasNominal);
-void TampilPosAnggaran(PosAnggaran pos[], int length);
-void PrintPosAnggaran(PosAnggaran pos[], int length);
-void LoadPosAnggaran(PosAnggaran **pos, int *count);
-
-int count = 0;
-
-// void MenuPos();
-
-int main()
-{
-    PosAnggaran *Pos = NULL;
-    LoadPosAnggaran(&Pos, &count);
-
     int select;
 
     do
     {
-        MenuPos();
+        printf("\n========================================= Aplikasi Keuangan Mahasiswa =========================================\n");
+        printf("\nMenu Laporan Keuangan:\n");
+        printf("\n1. Masukan data Pos Anggaran baru\n");
+        printf("2. Tampilkan semua data Pos Anggaran\n");
+        printf("0. Kembali ke menu utama\n");
+        printf("Masukan pilihan menu (0-2): ");
         scanf("%d", &select);
         switch (select)
         {
@@ -46,35 +32,19 @@ int main()
             printf("Masukkan berapa data baru: ");
             scanf("%d", &jumlahInput);
 
-            InputPosAnggaran(&Pos, &count, jumlahInput);
+            InputPosAnggaran(&Pos, &jumlahPos, jumlahInput);
+            PrintPosAnggaran(Pos, jumlahPos);
             break;
+
         case 2:
-            TampilPosAnggaran(Pos, count);
-            break;
-        case 0:
+            ShowPosAnggaran(Pos, jumlahPos);
             break;
 
         default:
             printf("Pilih menu yang benar!");
             break;
         }
-    } while (select);
-
-    return 0;
-}
-
-// Procedure LoadPosAnggaran
-/*	Melakukan read data dari file ke pos anggaran
-    Input	: -
-    Output	: Menampilkan menu dari Pos Anggaran
-*/
-void MenuPos()
-{
-    printf("========================================= Aplikasi Keuangan Mahasiswa =========================================\n");
-    printf("1. Masukan data Pos Anggaran baru\n");
-    printf("2. Tampilkan semua data\n");
-    printf("0. Kembali ke menu utama\n");
-    printf("Masukan pilihan menu (0-2): ");
+    } while (select != 0);
 }
 
 // Procedure LoadPosAnggaran
@@ -84,24 +54,25 @@ void MenuPos()
 */
 void LoadPosAnggaran(PosAnggaran **pos, int *count)
 {
-    FILE *file = fopen("../../data/DataPosAnggaran.txt", "r");
+    FILE *file = fopen("../data/DataPosAnggaran.txt", "r");
     if (file == NULL)
     {
         printf("File tidak ditemukan, mulai dari data kosong.\n");
         return;
     }
-
+    char buffer[256];
     char nama[MAX_STRING];
     int batas;
 
+    fgets(buffer, sizeof(buffer), file);
     while (fscanf(file, " |%[^|]|%d|", nama, &batas) == 2)
     {
         // Tambahkan 1 slot ke array dinamis
         *pos = realloc(*pos, (*count + 1) * sizeof(PosAnggaran));
 
         // Masukkan data ke array
-        strcpy((*pos)[*count].NamaAnggaran, nama);
-        (*pos)[*count].BatasNominal = batas;
+        strcpy((*pos)[*count].namaAnggaran, nama);
+        (*pos)[*count].batasNominal = batas;
 
         (*count)++; // naikkan jumlah data
     }
@@ -128,10 +99,11 @@ void InputPosAnggaran(PosAnggaran **pos, int *length, int jumlahInput)
         bool isNameValid;
         do
         {
+            getchar();
             printf("Masukkan nama anggaran: ");
-            scanf("%s", (*pos)[i].NamaAnggaran);
+            scanf("%[^\n]", (*pos)[i].namaAnggaran);
 
-            isNameValid = ValidasiNamaPos(*pos, i, (*pos)[i].NamaAnggaran);
+            isNameValid = ValidasiNamaPos(*pos, i, (*pos)[i].namaAnggaran);
 
         } while (isNameValid);
 
@@ -139,9 +111,9 @@ void InputPosAnggaran(PosAnggaran **pos, int *length, int jumlahInput)
         do
         {
             printf("Masukan batas nominal: ");
-            scanf("%d", &(*pos)[i].BatasNominal);
+            scanf("%d", &(*pos)[i].batasNominal);
 
-            isNominalValid = ValidasiNominalPos((*pos)[i].BatasNominal);
+            isNominalValid = ValidasiNominalPos((*pos)[i].batasNominal);
 
         } while (isNominalValid);
     }
@@ -158,9 +130,9 @@ bool ValidasiNamaPos(PosAnggaran pos[], int count, const char *nama)
 {
     for (int i = 0; i < count; i++)
     {
-        if (strcmp(pos[i].NamaAnggaran, nama) == 0)
+        if (strcmp(pos[i].namaAnggaran, nama) == 0)
         {
-            printf("Nama anggaran '%s' sudah ada! Masukkan nama lain!\n", pos[i].NamaAnggaran);
+            printf("Nama anggaran '%s' sudah ada! Masukkan nama lain!\n", pos[i].namaAnggaran);
             return true; // duplikat ditemukan
         }
     }
@@ -188,7 +160,7 @@ bool ValidasiNominalPos(int batasNominal)
     Input	: PosAnggaran pos[], length
     Output	: Daftar data Pos Anggaran
 */
-void TampilPosAnggaran(PosAnggaran pos[], int length)
+void ShowPosAnggaran(PosAnggaran pos[], int length)
 {
     printf("_____________________________________________\n");
 
@@ -198,7 +170,7 @@ void TampilPosAnggaran(PosAnggaran pos[], int length)
 
     for (int i = 0; i < length; i++)
     {
-        printf("|  %-3d |  %-15s |  %-14d |\n", i + 1, pos[i].NamaAnggaran, pos[i].BatasNominal);
+        printf("|  %-3d |  %-15s |  %-14d |\n", i + 1, pos[i].namaAnggaran, pos[i].batasNominal);
     }
     printf("|______|__________________|_________________|\n");
 }
@@ -212,12 +184,12 @@ void PrintPosAnggaran(PosAnggaran pos[], int length)
 {
     FILE *file;
 
-    file = fopen("../../data/DataPosAnggaran.txt", "w");
+    file = fopen("../data/DataPosAnggaran.txt", "w");
 
+    fprintf(file, "|NamaPosAnggaran|Nominal|\n");
     for (int i = 0; i < length; i++)
     {
-        // fprintf(file, "|  %-15s |  %-14d |\n", pos[i].NamaAnggaran, pos[i].BatasNominal);
-        fprintf(file, "|%s|%d|\n", pos[i].NamaAnggaran, pos[i].BatasNominal);
+        fprintf(file, "|%s|%d|\n", pos[i].namaAnggaran, pos[i].batasNominal);
     }
     fclose(file);
 }

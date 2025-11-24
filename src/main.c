@@ -1,45 +1,64 @@
 #include <stdio.h>
-#include <stdbool.h>
-#include <string.h>
 #include "../include/posanggaran.h"
+#include "../include/transaksi.h"
+#include "../include/laporankeuangan.h"
 
 void menu();
 
+/**
+ * Fungsi main
+ * ------------------------------------------
+ * I.S.  : Program belum dijalankan.
+ * F.S.  : Seluruh data Pos Anggaran dan Transaksi dimuat (load),
+ *         kemudian program menampilkan menu utama.
+ */
 int main()
 {
-    int select;
+    LoadPosAnggaran(&Pos, &jumlahPos);
+    LoadTransaksi(&transaksi, &jumlahTransaksi);
     menu();
-    do
-    {
-        switch (select)
-        {
-        case 1:
-
-            break;
-
-        case 2:
-            /* code */
-            break;
-
-        case 3:
-            /* code */
-            break;
-
-        default:
-            break;
-        }
-        /* code */
-    } while (select);
-
     return 0;
 }
 
+/**
+ * Procedure menu
+ * ------------------------------------------
+ * I.S.  : Data Pos Anggaran & Transaksi telah dimuat.
+ * F.S.  : Menampilkan menu utama secara berulang hingga user memilih exit (0).
+ */
 void menu()
 {
-    printf("========================================= Aplikasi Keuangan Mahasiswa =========================================\n");
-    printf("Pilihan menu\n");
-    printf("1. Pos Anggaran\n");
-    printf("2. Tampilkan \n");
-    printf("0. Kembali ke menu utama\n");
-    printf("Masukan pilihan menu (0-2): ");
+    int select;
+    do
+    {
+        printf("\n========================================= Aplikasi Keuangan Mahasiswa =========================================\n");
+        printf("\nPilihan menu\n");
+        printf("1. Pos Anggaran\n");
+        printf("2. Transaksi \n");
+        printf("3. Analisis Keuangan\n");
+        printf("0. Exit\n");
+        printf("Masukan pilihan menu (0-2): ");
+        scanf("%d", &select);
+        switch (select)
+        {
+        case 1:
+            MenuPosAnggaran();
+            break;
+
+        case 2:
+            MenuTransaksi();
+            break;
+
+        case 3:
+            MenuLaporanKeuangan();
+            break;
+
+        case 0:
+            printf("Keluar program...\n");
+            break;
+
+        default:
+            printf("Pilihan tidak valid\n");
+        }
+    } while (select != 0);
 }

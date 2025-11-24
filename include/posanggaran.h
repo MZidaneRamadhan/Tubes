@@ -7,19 +7,19 @@
 
 typedef struct
 {
-    char NamaAnggaran[MAX_STRING];
-    int BatasNominal;
-    int realisasi;
-    int jumlahTransaksi;
-    int SisaAnggaran;
-    char Status[20];
+    char namaAnggaran[MAX_STRING];
+    int batasNominal;
 } PosAnggaran;
 
-void LoadPosAnggaran(PosAnggaran pos[]);
-void InputPosAnggaran(PosAnggaran pos[], int length);
+extern PosAnggaran *Pos;
+extern int jumlahPos;
+
+void MenuPosAnggaran();
+void InputPosAnggaran(PosAnggaran **pos, int *length, int jumlahInput);
 bool ValidasiNamaPos(PosAnggaran pos[], int count, const char *nama);
-void TampilPosAnggaran(PosAnggaran pos[], int length);
+bool ValidasiNominalPos(int batasNominal);
+void ShowPosAnggaran(PosAnggaran pos[], int length);
 void PrintPosAnggaran(PosAnggaran pos[], int length);
-void LoadPosAnggaran(PosAnggaran pos[]);
+void LoadPosAnggaran(PosAnggaran **pos, int *count);
 
 #endif
