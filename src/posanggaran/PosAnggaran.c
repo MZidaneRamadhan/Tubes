@@ -4,54 +4,15 @@
 #include <stdlib.h>
 #include "../../include/posanggaran.h"
 
-PosAnggaran *Pos = NULL;
-int jumlahPos = 0;
-
-// Procedure MenuPos
-/*	Melakukan read data dari file ke pos anggaran
-    Input	: -
-    Output	: Menampilkan menu Pos Anggaran secara berulang
+/*
+    Author : Muhammad Zidane Ramadhan Oktaviantoro (251524058)
 */
-void MenuPosAnggaran()
-{
-    int select;
 
-    do
-    {
-        printf("\n========================================= Aplikasi Keuangan Mahasiswa =========================================\n");
-        printf("\nMenu Laporan Keuangan:\n");
-        printf("\n1. Masukan data Pos Anggaran baru\n");
-        printf("2. Tampilkan semua data Pos Anggaran\n");
-        printf("0. Kembali ke menu utama\n");
-        printf("Masukan pilihan menu (0-2): ");
-        scanf("%d", &select);
-        switch (select)
-        {
-        case 1:
-            int jumlahInput;
-            printf("Masukkan berapa data baru: ");
-            scanf("%d", &jumlahInput);
-
-            InputPosAnggaran(&Pos, &jumlahPos, jumlahInput);
-            PrintPosAnggaran(Pos, jumlahPos);
-            break;
-
-        case 2:
-            ShowPosAnggaran(Pos, jumlahPos);
-            break;
-
-        default:
-            printf("Pilih menu yang benar!");
-            break;
-        }
-    } while (select != 0);
-}
-
-// Procedure LoadPosAnggaran
-/*	Melakukan read data dari file ke pos anggaran
-    Input	: PosAnggaran pos[]
-    Output	: Mendapatkan nilai dari file
-*/
+/**
+ *  Procedure LoadPosAnggaran
+ *  I.S.    : Array pos mungkin kosong dan file DataPosAnggaran.txt mungkin ada atau tidak.
+ *  F.S.    : Array pos terisi dengan data pos anggaran hasil pembacaan file.
+ **/
 void LoadPosAnggaran(PosAnggaran **pos, int *count)
 {
     FILE *file = fopen("../data/DataPosAnggaran.txt", "r");
@@ -79,12 +40,11 @@ void LoadPosAnggaran(PosAnggaran **pos, int *count)
     fclose(file);
 }
 
-// Procedure ValidasiNamaPos
-/*	Menginput data pos anggaran ke dalam array struct
-    Input	: PosAnggaran pos[], length
-    Output	: Nama pos anggaran
-              Batas nominal pos anggaran
-*/
+/**
+ *  Procedure InputPosAnggaran
+ *  I.S.    : Array pos terdefinisi dengan length lama, user belum memasukkan data baru.
+ *  F.S.    : Array pos bertambah sejumlah jumlahInput dan setiap data sudah tervalidasi.
+ **/
 void InputPosAnggaran(PosAnggaran **pos, int *length, int jumlahInput)
 {
     int oldLength = *length;
@@ -120,12 +80,12 @@ void InputPosAnggaran(PosAnggaran **pos, int *length, int jumlahInput)
     *length = newLength;
 }
 
-// Fungsi ValidasiNamaPos
-/*	Memeriksa apakah ada nama pos anggaran yang sama
-    Input	: PosAnggaran pos[], count, *nama
-    Output	: True  -> duplikat
-              False -> tidak duplikat
-*/
+/**
+ *  Fungsi ValidasiNominalPos
+ *  I.S.    : batasNominal diberikan oleh user.
+ *  F.S.    : Menghasilkan true jika batas nominal tidak valid (<= 0),
+ *            atau false jika batas nominal valid.
+ **/
 bool ValidasiNamaPos(PosAnggaran pos[], int count, const char *nama)
 {
     for (int i = 0; i < count; i++)
@@ -139,12 +99,12 @@ bool ValidasiNamaPos(PosAnggaran pos[], int count, const char *nama)
     return false;
 }
 
-// Fungsi ValidasiNominalPos
-/*	Memeriksa apakah ada nama pos anggaran yang sama
-    Input	: PosAnggaran pos[], count, *nama
-    Output	: True  -> batas nominal <= 0
-              False -> batas nominal tidak <= 0
-*/
+/**
+ *  Fungsi ValidasiNominalPos
+ *  I.S.    : batasNominal diberikan oleh user.
+ *  F.S.    : Menghasilkan true jika batas nominal tidak valid (<= 0),
+ *            atau false jika batas nominal valid.
+ **/
 bool ValidasiNominalPos(int batasNominal)
 {
     if (batasNominal <= 0)
@@ -155,11 +115,11 @@ bool ValidasiNominalPos(int batasNominal)
     return false;
 }
 
-// Procedure TampilPosAnggaran
-/*	Menampilkan data pos anggaran ke terminal
-    Input	: PosAnggaran pos[], length
-    Output	: Daftar data Pos Anggaran
-*/
+/**
+ *  Procedure ShowPosAnggaran
+ *  I.S.    : Array pos terdefinisi dan memiliki length data.
+ *  F.S.    : Menampilkan seluruh data pos anggaran ke layar dalam format tabel.
+ **/
 void ShowPosAnggaran(PosAnggaran pos[], int length)
 {
     printf("_____________________________________________\n");
@@ -175,12 +135,12 @@ void ShowPosAnggaran(PosAnggaran pos[], int length)
     printf("|______|__________________|_________________|\n");
 }
 
-// Procedure TampilPosAnggaran
-/*	Melakukan write data pos anggaran ke dalam file DataPosAnggaran.txt di folder /data
-    Input	: PosAnggaran pos[], length
-    Output	: Daftar data Pos Anggaran
-*/
-void PrintPosAnggaran(PosAnggaran pos[], int length)
+/**
+ *  Procedure PrintPosAnggaran
+ *  I.S.    : Array pos terisi sejumlah length data.
+ *  F.S.    : Seluruh data pos anggaran ditulis ke file DataPosAnggaran.txt dalam folder /data.
+ **/
+void SavePosAnggaran(PosAnggaran pos[], int length)
 {
     FILE *file;
 

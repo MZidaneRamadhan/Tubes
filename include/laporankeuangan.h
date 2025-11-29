@@ -2,6 +2,15 @@
 #define LAPORANKEUANGAN
 #include "transaksi.h"
 
+extern int jumlahPengeluaran;
+extern int totalPengeluaran;
+extern int jumlahPenmasukan;
+extern int totalPenmasukan;
+extern float saldo;
+extern float rataRata;
+extern float persentaseSisa;
+extern char kesimpulanKondisiKeuangan[100];
+
 int JumlahTransPemasukan(Transaksi transaksi[], int jumlahTransaksi);
 int JumlahTransPengeluaran(Transaksi transaksi[], int jumlahTransaksi);
 int TotalPemasukan(Transaksi transaksi[], int jumlahTransaksi);
@@ -18,6 +27,5 @@ int JumlahTransPerPos(Transaksi transaksi[], int jumlahTransaksi, char namaPos[]
 char *StatusPos(int sisa);
 // void ShowTransaksi(Transaksi transaksi[], int jumlahTransaksi, int pilihanUser);
 void ShowLaporanKeuangan(PosAnggaran pos[], int jumlahPos, Transaksi transaksi[], int jumlahTransaksi);
-void MenuLaporanKeuangan();
 
 #endif

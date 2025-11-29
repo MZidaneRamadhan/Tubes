@@ -23,9 +23,6 @@ extern int jumlahTransaksi;
 /*Procedure yang melakukan write data transaksi ke dalam file .txt*/
 void LoadTransaksi(Transaksi **transaksi, int *jumlahTransaksi);
 
-/*Procedure yang akan menampilkan daftar menu transaksi.*/
-void MenuTransaksi();
-
 /*Procedure yang melakukan proses input data transaksi kedalam Array of scruct Transaksi*/
 void InputTransaksi(Transaksi **transaksi, int *jumlahTransaksi, int jumlahInputTransaksi);
 
@@ -45,6 +42,6 @@ bool ValidasiNominal(int nominal);
 void ShowTransaksi(Transaksi transaksi[], int JumlahTransaksi, int pilihanUser);
 
 /*Procedure yang melakukan write data transaksi ke dalam file .txt*/
-void PrintTransaksi(Transaksi transaksi[], int JumlahTransaksi);
+void SaveTransaksi(Transaksi transaksi[], int JumlahTransaksi);
 
 #endif

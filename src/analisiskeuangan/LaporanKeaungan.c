@@ -6,8 +6,18 @@
 #include "../../include/transaksi.h"
 #include "../../include/laporankeuangan.h"
 
-// Fungsi JumlahTransPemasukan
-/*	Menghitung jumlah transaksi berjenis pemasukan
+int jumlahPengeluaran = 0;
+int totalPengeluaran = 0;
+int jumlahPenmasukan = 0;
+int totalPenmasukan = 0;
+float saldo = 0;
+float rataRata = 0;
+float persentaseSisa = 0;
+char kesimpulanKondisiKeuangan[100];
+
+/*	Fungsi JumlahTransPemasukan
+
+    Menghitung jumlah transaksi berjenis pemasukan
     Input	: Data jumlah transaksi dari user
     Output	: Jumlah transaksi yang berjenis pemasukan saja
 */
@@ -193,8 +203,8 @@ void ShowRekapitulasi(Transaksi transaksi[], int jumlahTransaksi)
     printf("|_______________________|___________________|_________________|\n");
 }
 
-// Fungsi RealisasiPos
-/*	Menghitung total nominal transaksi pengekuaran per satu pos anggaran
+/*  Fungsi RealisasiPos
+    Menghitung total nominal transaksi pengekuaran per satu pos anggaran
     Input	: Data yang tersimpan di dalam array transaksi
     Output	: Totak nominal transaksi pengeluaran per pos anggaran
 */
@@ -312,48 +322,4 @@ void ShowLaporanKeuangan(PosAnggaran pos[], int jumlahPos, Transaksi transaksi[]
     float persentaseSisa = PersentaseSisa(saldo, totalPemasukan);
     printf("Kondisi Keuangan  : %s (Sisa %.2f (persen) dari total pemasukan)\n", KondisiKeuangan(saldo), persentaseSisa);
     printf("Kesimpulan        : %s\n", KesimpulanKondisiKeuangan(persentaseSisa));
-}
-
-/* Prosedur MenuLaporanAkhir
-    I.S.	: Laporan Keuanngan pilihan user belum muncul ke layar
-    F.S.	: Laporan Keuangan pilihan user sudah muncul ke layar
-*/
-void MenuLaporanKeuangan()
-{
-    int select;
-    do
-    {
-        printf("\nMenu Laporan Keuangan:\n");
-        printf("1. Tampilkan Laporan Keuangan\n");
-        printf("2. Tampilkan Seluruh Transaksi\n");
-        printf("3. Tampilkan Transaksi Pemasukan\n");
-        printf("4. Tampilkan Transaksi Pengeluaran\n");
-        // printf("5. Tampilkan Rekapitulasi\n");
-        printf("0. Keluar\n");
-        printf("Pilih opsi (0-5): ");
-        scanf("%d", &select);
-        switch (select)
-        {
-        case 1:
-            ShowLaporanKeuangan(Pos, jumlahPos, transaksi, jumlahTransaksi);
-            break;
-        case 2:
-            ShowTransaksi(transaksi, jumlahTransaksi, 0);
-            break;
-        case 3:
-            ShowTransaksi(transaksi, jumlahTransaksi, 1);
-            break;
-        case 4:
-            ShowTransaksi(transaksi, jumlahTransaksi, 2);
-            break;
-        // case 5:
-        //     ShowRekapitulasi(transaksi, jumlahTransaksi);
-        //     break;
-        case 0:
-            printf("Keluar...\n");
-            break;
-        default:
-            printf("Pilihan tidak valid. Silakan coba lagi.\n");
-        }
-    } while (select != 0);
 }
