@@ -4,6 +4,10 @@
 #include "../../include/posanggaran.h"
 #include "../../include/transaksi.h"
 
+/*	Prosedur SaveTransaksi
+    I.S.	: Data transaksi dari user belum di ambil dari file eksternal
+    F.S.	: Data transaksi dari user sudah di ambil dari file eksternal
+*/
 void LoadTransaksi(Transaksi **transaksi, int *jumlahTransaksi)
 {
     FILE *file = fopen("../data/DataTransaksi.txt", "r");
@@ -222,7 +226,7 @@ void ShowTransaksi(Transaksi transaksi[], int JumlahTransaksi, int pilihanUser)
     printf("|________|______________|______________|______________|______________|______________________|\n");
 }
 
-/*	Prosedur PrintTransaksi
+/*	Prosedur SaveTransaksi
     I.S.	: Data transaksi dari user belum tersimpan di file eksternal
     F.S.	: Data transaksi dari user sudah tersimpan di file eksternal
 */

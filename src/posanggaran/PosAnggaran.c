@@ -136,7 +136,7 @@ void ShowPosAnggaran(PosAnggaran pos[], int length)
 }
 
 /**
- *  Procedure PrintPosAnggaran
+ *  Procedure SavePosAnggaran
  *  I.S.    : Array pos terisi sejumlah length data.
  *  F.S.    : Seluruh data pos anggaran ditulis ke file DataPosAnggaran.txt dalam folder /data.
  **/

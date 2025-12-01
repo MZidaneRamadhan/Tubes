@@ -10,9 +10,12 @@ PosAnggaran *Pos = NULL;
 int jumlahPos = 0;
 
 void menu();
+void DisplayMenu();
 void MenuPosAnggaran();
 /*Procedure yang akan menampilkan daftar menu transaksi.*/
+void DisplayMenuTransaksi();
 void MenuTransaksi();
+void DisplayMenuLaporanKeuangan();
 void MenuLaporanKeuangan();
 
 /**
@@ -27,10 +30,27 @@ int main()
 {
     LoadPosAnggaran(&Pos, &jumlahPos);
     LoadTransaksi(&transaksi, &jumlahTransaksi);
+    AnalisisLaporanKeuangan(Pos, jumlahPos, transaksi, jumlahTransaksi);
     menu();
     return 0;
 }
 
+/**
+ * Procedure Display Menu
+ * ------------------------------------------
+ * I.S.  : -.
+ * F.S.  : Menampilkan daftar menu utama secara berulang hingga user memilih exit (0).
+ */
+void DisplayMenu()
+{
+    printf("\n========================================= Aplikasi Keuangan Mahasiswa =========================================\n");
+    printf("\nPilihan menu\n");
+    printf("1. Pos Anggaran\n");
+    printf("2. Transaksi \n");
+    printf("3. Analisis Keuangan\n");
+    printf("0. Exit\n");
+    printf("Masukan pilihan menu (0-3): ");
+}
 /**
  * Procedure menu
  * ------------------------------------------
@@ -42,13 +62,7 @@ void menu()
     int select;
     do
     {
-        printf("\n========================================= Aplikasi Keuangan Mahasiswa =========================================\n");
-        printf("\nPilihan menu\n");
-        printf("1. Pos Anggaran\n");
-        printf("2. Transaksi \n");
-        printf("3. Analisis Keuangan\n");
-        printf("0. Exit\n");
-        printf("Masukan pilihan menu (0-3): ");
+        DisplayMenu();
         scanf("%d", &select);
         switch (select)
         {
@@ -75,6 +89,22 @@ void menu()
 }
 
 /**
+ * Procedure Display Menu
+ * ------------------------------------------
+ * I.S.  : -.
+ * F.S.  : Menampilkan daftar menu utama secara berulang hingga user memilih exit (0).
+ */
+void DisplayMenuPosAnggaran()
+{
+    printf("\n========================================= Aplikasi Keuangan Mahasiswa =========================================\n");
+    printf("\nMenu Pos Anggaran:\n");
+    printf("\n1. Masukan data Pos Anggaran baru\n");
+    printf("2. Tampilkan semua data Pos Anggaran\n");
+    printf("0. Kembali ke menu utama\n");
+    printf("Masukan pilihan menu (0-2): ");
+}
+
+/**
  *  Procedure MenuPosAnggaran
  *  Melakukan read data dari file ke pos anggaran
  *  I.S	: -
@@ -86,12 +116,7 @@ void MenuPosAnggaran()
 
     do
     {
-        printf("\n========================================= Aplikasi Keuangan Mahasiswa =========================================\n");
-        printf("\nMenu Laporan Keuangan:\n");
-        printf("\n1. Masukan data Pos Anggaran baru\n");
-        printf("2. Tampilkan semua data Pos Anggaran\n");
-        printf("0. Kembali ke menu utama\n");
-        printf("Masukan pilihan menu (0-2): ");
+        DisplayMenuPosAnggaran();
         scanf("%d", &select);
         switch (select)
         {
@@ -108,24 +133,45 @@ void MenuPosAnggaran()
             ShowPosAnggaran(Pos, jumlahPos);
             break;
 
+        case 0:
+            printf("\nKembali ke menu awal");
+            break;
+
         default:
-            printf("Pilih menu yang benar!");
+            printf("\nPilih menu yang benar!");
             break;
         }
     } while (select != 0);
 }
 
+/**
+ * Procedure Display Menu
+ * ------------------------------------------
+ * I.S.  : -.
+ * F.S.  : Menampilkan daftar menu utama secara berulang hingga user memilih exit (0).
+ */
+void DisplayMenuTransaksi()
+{
+    printf("\n========================================= Aplikasi Keuangan Mahasiswa =========================================\n");
+    printf("\nMenu Transaksi\n");
+    printf("\n1. Masukan data Tramsaksi baru\n");
+    printf("2. Tampilkan semua data Transaksi\n");
+    printf("0. Kembali ke menu utama\n");
+    printf("Masukan pilihan menu (0-2): ");
+}
+
+/**
+ *  Prosedur MenuTransaksi
+ *  Author : Firliana Febrina (251524044)
+ *  I.S.	: Laporan Keuanngan pilihan user belum muncul ke layar
+ *  F.S.	: Laporan Keuangan pilihan user sudah muncul ke layar
+ **/
 void MenuTransaksi()
 {
     int select;
     do
     {
-        printf("\n========================================= Aplikasi Keuangan Mahasiswa =========================================\n");
-        printf("\nMenu Laporan Keuangan:\n");
-        printf("\n1. Masukan data Tramsaksi baru\n");
-        printf("2. Tampilkan semua data Transaksi\n");
-        printf("0. Kembali ke menu utama\n");
-        printf("Masukan pilihan menu (0-2): ");
+        DisplayMenuTransaksi();
         scanf("%d", &select);
         switch (select)
         {
@@ -135,23 +181,41 @@ void MenuTransaksi()
             scanf("%d", &jumlahInputTransaksi);
             InputTransaksi(&transaksi, &jumlahTransaksi, jumlahInputTransaksi);
             ShowTransaksi(transaksi, jumlahTransaksi, 0);
-            PrintTransaksi(transaksi, jumlahTransaksi);
+            SaveTransaksi(transaksi, jumlahTransaksi);
             break;
-
         case 2:
             ShowTransaksi(transaksi, jumlahTransaksi, 0);
             break;
-
+        case 0:
+            printf("\nKembali ke menu awal");
+            break;
         default:
-            printf("Pilih menu yang benar!");
+            printf("\nPilih menu yang benar!");
             break;
         }
     } while (select != 0);
 }
 
 /**
+ * Procedure Display Laporan Keuangan
+ * ------------------------------------------
+ * I.S.  : -.
+ * F.S.  : Menampilkan daftar menu utama secara berulang hingga user memilih exit (0).
+ */
+void DisplayMenuLaporanKeuangan()
+{
+    printf("\nMenu Laporan Keuangan:\n");
+    printf("1. Tampilkan Laporan Keuangan\n");
+    printf("2. Tampilkan Seluruh Transaksi\n");
+    printf("3. Tampilkan Transaksi Pemasukan\n");
+    printf("4. Tampilkan Transaksi Pengeluaran\n");
+    printf("0. Keluar\n");
+    printf("Pilih opsi (0-5): ");
+}
+
+/**
  *  Prosedur MenuLaporanKeuangan
- *  Author : Firliana Febrina (251524058)
+ *  Author : Abhidal Muhammad Gazza (251524032)
  *  I.S.	: Laporan Keuanngan pilihan user belum muncul ke layar
  *  F.S.	: Laporan Keuangan pilihan user sudah muncul ke layar
  **/
@@ -160,14 +224,7 @@ void MenuLaporanKeuangan()
     int select;
     do
     {
-        printf("\nMenu Laporan Keuangan:\n");
-        printf("1. Tampilkan Laporan Keuangan\n");
-        printf("2. Tampilkan Seluruh Transaksi\n");
-        printf("3. Tampilkan Transaksi Pemasukan\n");
-        printf("4. Tampilkan Transaksi Pengeluaran\n");
-        // printf("5. Tampilkan Rekapitulasi\n");
-        printf("0. Keluar\n");
-        printf("Pilih opsi (0-5): ");
+        DisplayMenuLaporanKeuangan();
         scanf("%d", &select);
         switch (select)
         {
@@ -183,11 +240,8 @@ void MenuLaporanKeuangan()
         case 4:
             ShowTransaksi(transaksi, jumlahTransaksi, 2);
             break;
-        // case 5:
-        //     ShowRekapitulasi(transaksi, jumlahTransaksi);
-        //     break;
         case 0:
-            printf("Keluar...\n");
+            printf("\nKembali ke menu awal");
             break;
         default:
             printf("Pilihan tidak valid. Silakan coba lagi.\n");
