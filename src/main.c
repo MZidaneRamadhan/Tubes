@@ -1,14 +1,16 @@
 #include <stdio.h>
 #include "../include/posanggaran.h"
 #include "../include/transaksi.h"
+#include "../include/display.h"
 #include "../include/laporankeuangan.h"
+#include <windows.h>
 
 Transaksi *transaksi = NULL;
 int jumlahTransaksi = 0;
 
 PosAnggaran *Pos = NULL;
 int jumlahPos = 0;
-
+void Loading();
 void menu();
 void DisplayMenu();
 void MenuPosAnggaran();
@@ -44,11 +46,14 @@ int main()
 void DisplayMenu()
 {
     printf("\n========================================= Aplikasi Keuangan Mahasiswa =========================================\n");
-    printf("\nPilihan menu\n");
+    printf("=====================================\n");
+    printf("             PILIHAN MENU            \n");
+    printf("=====================================\n");
     printf("1. Pos Anggaran\n");
     printf("2. Transaksi \n");
     printf("3. Analisis Keuangan\n");
-    printf("0. Exit\n");
+    printf("\033[31m0. Exit\033[0m \n");
+    printf("=====================================\n");
     printf("Masukan pilihan menu (0-3): ");
 }
 /**
@@ -83,7 +88,8 @@ void menu()
             break;
 
         default:
-            printf("Pilihan tidak valid\n");
+            Alert();
+            // printf("\n\033[93mPilihan tidak valid. Pilih menu yang benar!\033[0m\n");
         }
     } while (select != 0);
 }
@@ -96,11 +102,13 @@ void menu()
  */
 void DisplayMenuPosAnggaran()
 {
-    printf("\n========================================= Aplikasi Keuangan Mahasiswa =========================================\n");
-    printf("\nMenu Pos Anggaran:\n");
+    printf("\n=====================================\n");
+    printf("           MENU POS ANGGARAN         \n");
+    printf("=====================================\n");
     printf("\n1. Masukan data Pos Anggaran baru\n");
     printf("2. Tampilkan semua data Pos Anggaran\n");
-    printf("0. Kembali ke menu utama\n");
+    printf("\033[93m0. Kembali ke menu utama\033[0m\n");
+    printf("=====================================\n");
     printf("Masukan pilihan menu (0-2): ");
 }
 
@@ -126,6 +134,8 @@ void MenuPosAnggaran()
             scanf("%d", &jumlahInput);
 
             InputPosAnggaran(&Pos, &jumlahPos, jumlahInput);
+            Loading();
+            ShowPosAnggaran(Pos, jumlahPos);
             SavePosAnggaran(Pos, jumlahPos);
             break;
 
@@ -138,7 +148,8 @@ void MenuPosAnggaran()
             break;
 
         default:
-            printf("\nPilih menu yang benar!");
+            Alert();
+            // printf("\n\033[93mPilihan tidak valid. Pilih menu yang benar!\033[0m\n");
             break;
         }
     } while (select != 0);
@@ -152,11 +163,14 @@ void MenuPosAnggaran()
  */
 void DisplayMenuTransaksi()
 {
-    printf("\n========================================= Aplikasi Keuangan Mahasiswa =========================================\n");
-    printf("\nMenu Transaksi\n");
-    printf("\n1. Masukan data Tramsaksi baru\n");
+    // printf("\n========================================= APLIKASI KEUANGAN MAHASISWA =========================================\n");
+    printf("\n=====================================\n");
+    printf("           MENU TRANSAKSI            \n");
+    printf("=====================================\n");
+    printf("1. Masukan data Tramsaksi baru\n");
     printf("2. Tampilkan semua data Transaksi\n");
-    printf("0. Kembali ke menu utama\n");
+    printf("\033[93m0. Kembali ke menu utama\033[0m\n");
+    printf("=====================================\n");
     printf("Masukan pilihan menu (0-2): ");
 }
 
@@ -179,9 +193,14 @@ void MenuTransaksi()
             int jumlahInputTransaksi;
             printf("\nMasukkan berapa data baru: ");
             scanf("%d", &jumlahInputTransaksi);
+
             InputTransaksi(&transaksi, &jumlahTransaksi, jumlahInputTransaksi);
+            Loading();
+            AnalisisLaporanKeuangan(Pos, jumlahPos, transaksi, jumlahTransaksi);
+
             ShowTransaksi(transaksi, jumlahTransaksi, 0);
             SaveTransaksi(transaksi, jumlahTransaksi);
+
             break;
         case 2:
             ShowTransaksi(transaksi, jumlahTransaksi, 0);
@@ -190,7 +209,8 @@ void MenuTransaksi()
             printf("\nKembali ke menu awal");
             break;
         default:
-            printf("\nPilih menu yang benar!");
+            Alert();
+            // printf("\n\033[93mPilihan tidak valid. Pilih menu yang benar!\033[0m\n");
             break;
         }
     } while (select != 0);
@@ -204,13 +224,17 @@ void MenuTransaksi()
  */
 void DisplayMenuLaporanKeuangan()
 {
-    printf("\nMenu Laporan Keuangan:\n");
-    printf("1. Tampilkan Laporan Keuangan\n");
-    printf("2. Tampilkan Seluruh Transaksi\n");
-    printf("3. Tampilkan Transaksi Pemasukan\n");
-    printf("4. Tampilkan Transaksi Pengeluaran\n");
-    printf("0. Keluar\n");
-    printf("Pilih opsi (0-5): ");
+    printf("\n=====================================\n");
+    printf("        MENU LAPORAN KEUANGAN        \n");
+    printf("=====================================\n");
+    printf(" 1. Tampilkan Laporan Keuangan\n");
+    printf(" 2. Tampilkan Seluruh Transaksi\n");
+    printf(" 3. Tampilkan Transaksi Pemasukan\n");
+    printf(" 4. Tampilkan Transaksi Pengeluaran\n");
+    printf(" 5. Laporan per Bulan\n");
+    printf("\033[93m 0. Kembali ke menu utama\033[0m\n");
+    printf("=====================================\n");
+    printf(" Pilih opsi (0-4) : ");
 }
 
 /**
@@ -229,7 +253,7 @@ void MenuLaporanKeuangan()
         switch (select)
         {
         case 1:
-            ShowLaporanKeuangan(Pos, jumlahPos, transaksi, jumlahTransaksi);
+            ShowLaporanKeuangan();
             break;
         case 2:
             ShowTransaksi(transaksi, jumlahTransaksi, 0);
@@ -240,11 +264,42 @@ void MenuLaporanKeuangan()
         case 4:
             ShowTransaksi(transaksi, jumlahTransaksi, 2);
             break;
+        case 5:
+            int bulan, tahun;
+            printf("Masukkan bulan (1-12): ");
+            scanf("%d", &bulan);
+            printf("Masukkan tahun: ");
+            scanf("%d", &tahun);
+            ShowLaporanPerBulan(bulan, tahun);
+            break;
         case 0:
             printf("\nKembali ke menu awal");
             break;
         default:
-            printf("Pilihan tidak valid. Silakan coba lagi.\n");
+            Alert();
+            // printf("\n\033[93mPilihan tidak valid. Pilih menu yang benar!\033[0m\n");
         }
     } while (select != 0);
+}
+
+void Loading()
+{
+    printf("Menambah data");
+    for (int i = 0; i < 3; i++)
+    {
+        printf(".");
+        fflush(stdout);
+        Sleep(200); // Windows
+    }
+    printf("\n");
+}
+
+void Alert()
+{
+    Sleep(200); // Windows
+    printf("\n\033[93mPilihan tidak valid. Pilih menu yang benar!\033[0m\n");
+    // printf("\n\033[93mMenambah data\033[0m");
+    fflush(stdout);
+    Sleep(1000); // Windows
+    printf("\n");
 }

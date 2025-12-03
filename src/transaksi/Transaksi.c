@@ -70,7 +70,7 @@ void InputTransaksi(Transaksi **transaksi, int *jumlahTransaksi, int jumlahInput
 
             if (!ValidasiTanggal((*transaksi)[i].tanggal))
             {
-                printf("Tanggal tidak boleh kosong!\n");
+                printf("Tanggal tidak valid! (format harus dd/mm/yyyy)\n");
             }
 
         } while (!ValidasiTanggal((*transaksi)[i].tanggal));
@@ -96,8 +96,9 @@ void InputTransaksi(Transaksi **transaksi, int *jumlahTransaksi, int jumlahInput
         {
             do
             {
+                getchar();
                 printf("Pos Anggaran: ");
-                scanf("%s", (*transaksi)[i].namaPos);
+                scanf("%[^\n]", (*transaksi)[i].namaPos);
 
                 if (!ValidasiPos(Pos, jumlahPos, (*transaksi)[i].namaPos))
                 {
@@ -177,9 +178,54 @@ bool ValidasiPos(PosAnggaran daftarPos[], int JumlahPos, char namapos[])
  *            dan false jika kosong.
  **/
 
-bool ValidasiTanggal(char tanggal[])
+bool ValidasiTanggal(const char *tanggal)
 {
-    return strlen(tanggal) > 0;
+    int dd, mm, yyyy;
+
+    // 1. Cek format (harus 3 angka dengan separator '/')
+    if (sscanf(tanggal, "%d/%d/%d", &dd, &mm, &yyyy) != 3)
+        return false;
+
+    // 2. Cek batas bulan
+    if (mm < 1 || mm > 12)
+        return false;
+
+    // 3. Tentukan jumlah hari per bulan
+    int daysInMonth;
+
+    switch (mm)
+    {
+    case 1:
+    case 3:
+    case 5:
+    case 7:
+    case 8:
+    case 10:
+    case 12:
+        daysInMonth = 31;
+        break;
+    case 4:
+    case 6:
+    case 9:
+    case 11:
+        daysInMonth = 30;
+        break;
+    case 2:
+        // Tahun kabisat
+        if ((yyyy % 4 == 0 && yyyy % 100 != 0) || (yyyy % 400 == 0))
+            daysInMonth = 29;
+        else
+            daysInMonth = 28;
+        break;
+    default:
+        return false;
+    }
+
+    // 4. Cek batas hari
+    if (dd < 1 || dd > daysInMonth)
+        return false;
+
+    return true;
 }
 
 /*	Prosedur ShowTransaksi

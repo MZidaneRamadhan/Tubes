@@ -12,3 +12,13 @@ T010|01/03/2025|Pemasukan|Pemasukan|300000|Gaji
 T011|11/03/2025|Pengeluaran|makan|4000|Alhamdulillah makan
 T012|30/03/2025|Pemasukan|Pemasukan|900000|jatuh dari langit
 T013|11/04/2025|Pemasukan|Pemasukan|1000000|Nyuri
+T014|11/11/2025|Pengeluaran|makan|100000|Fine Dining
+T015|11/11/2025|Pengeluaran|Makan|22000|steak
+T016|11/11/2025|Pengeluaran|kopi|15000|kopi
+T017|12/12/2025|Pemasukan|Pemasukan|100000|1321
+T018|2/12/2025|Pengeluaran|belajar|13000|Buku
+T019|2/12/2025|Pengeluaran|Belajar|5000|pulpen
+T020|2/12/2052|pengeluaran|minum|5000|thai tea
+T021|2/12/2050|pengeluaran|Lain lain|20000|Tambal ban 
+T022|2/12/2025|Pengeluaran|Lain lain|7000000|cicil mobil supra
+T023|2/12/2025|Pengeluaran|makan|2000000|Fine dining w/

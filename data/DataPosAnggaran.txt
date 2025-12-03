@@ -5,3 +5,4 @@
 |bensin|100000|
 |belajar|50000|
 |Lain lain|75000|
+|Parkir|50000|

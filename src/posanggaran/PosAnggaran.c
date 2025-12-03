@@ -2,6 +2,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <stdlib.h>
+#include "../../include/display.h"
 #include "../../include/posanggaran.h"
 
 /*
@@ -42,17 +43,17 @@ void LoadPosAnggaran(PosAnggaran **pos, int *count)
 
 /**
  *  Procedure InputPosAnggaran
- *  I.S.    : Array pos terdefinisi dengan length lama, user belum memasukkan data baru.
+ *  I.S.    : Array pos terdefinisi dengan jumlahPos lama, user belum memasukkan data baru.
  *  F.S.    : Array pos bertambah sejumlah jumlahInput dan setiap data sudah tervalidasi.
  **/
-void InputPosAnggaran(PosAnggaran **pos, int *length, int jumlahInput)
+void InputPosAnggaran(PosAnggaran **pos, int *jumlahPos, int jumlahInput)
 {
-    int oldLength = *length;
-    int newLength = *length + jumlahInput;
+    int oldjumlahPos = *jumlahPos;
+    int newjumlahPos = *jumlahPos + jumlahInput;
 
-    *pos = realloc(*pos, newLength * sizeof(PosAnggaran));
+    *pos = realloc(*pos, newjumlahPos * sizeof(PosAnggaran));
 
-    for (int i = oldLength; i < newLength; i++)
+    for (int i = oldjumlahPos; i < newjumlahPos; i++)
     {
         printf("\nData ke-%d\n", i + 1);
 
@@ -77,7 +78,7 @@ void InputPosAnggaran(PosAnggaran **pos, int *length, int jumlahInput)
 
         } while (isNominalValid);
     }
-    *length = newLength;
+    *jumlahPos = newjumlahPos;
 }
 
 /**
@@ -92,7 +93,7 @@ bool ValidasiNamaPos(PosAnggaran pos[], int count, const char *nama)
     {
         if (strcmp(pos[i].namaAnggaran, nama) == 0)
         {
-            printf("Nama anggaran '%s' sudah ada! Masukkan nama lain!\n", pos[i].namaAnggaran);
+            printf("Nama anggaran '%s' sudah ada! Masukkan nama lain!❗\n", pos[i].namaAnggaran);
             return true; // duplikat ditemukan
         }
     }
@@ -117,18 +118,22 @@ bool ValidasiNominalPos(int batasNominal)
 
 /**
  *  Procedure ShowPosAnggaran
- *  I.S.    : Array pos terdefinisi dan memiliki length data.
+ *  I.S.    : Array pos terdefinisi dan memiliki jumlahPos data.
  *  F.S.    : Menampilkan seluruh data pos anggaran ke layar dalam format tabel.
  **/
-void ShowPosAnggaran(PosAnggaran pos[], int length)
+void ShowPosAnggaran(PosAnggaran pos[], int jumlahPos)
 {
+    printf("\n============================================\n");
+    printf("          Tabel Daftar Pos Anggaran         \n");
+    printf("============================================\n");
+
     printf("_____________________________________________\n");
 
     printf("|  No  |  %-15s |  %-14s |\n", "Nama Anggaran", "Batas Nominal");
 
     printf("|______|__________________|_________________|\n");
 
-    for (int i = 0; i < length; i++)
+    for (int i = 0; i < jumlahPos; i++)
     {
         printf("|  %-3d |  %-15s |  %-14d |\n", i + 1, pos[i].namaAnggaran, pos[i].batasNominal);
     }
@@ -137,17 +142,17 @@ void ShowPosAnggaran(PosAnggaran pos[], int length)
 
 /**
  *  Procedure SavePosAnggaran
- *  I.S.    : Array pos terisi sejumlah length data.
+ *  I.S.    : Array pos terisi sejumlah jumlahPos data.
  *  F.S.    : Seluruh data pos anggaran ditulis ke file DataPosAnggaran.txt dalam folder /data.
  **/
-void SavePosAnggaran(PosAnggaran pos[], int length)
+void SavePosAnggaran(PosAnggaran pos[], int jumlahPos)
 {
     FILE *file;
 
     file = fopen("../data/DataPosAnggaran.txt", "w");
 
     fprintf(file, "|NamaPosAnggaran|Nominal|\n");
-    for (int i = 0; i < length; i++)
+    for (int i = 0; i < jumlahPos; i++)
     {
         fprintf(file, "|%s|%d|\n", pos[i].namaAnggaran, pos[i].batasNominal);
     }

@@ -20,28 +20,65 @@ extern Transaksi *transaksi;
 
 extern int jumlahTransaksi;
 
-/*Procedure yang melakukan write data transaksi ke dalam file .txt*/
+/*	Prosedur SaveTransaksi
+    I.S.	: Data transaksi dari user belum di ambil dari file eksternal
+    F.S.	: Data transaksi dari user sudah di ambil dari file eksternal
+*/
 void LoadTransaksi(Transaksi **transaksi, int *jumlahTransaksi);
 
-/*Procedure yang melakukan proses input data transaksi kedalam Array of scruct Transaksi*/
+/**
+ *  Prosedur InputTransaksi
+ *  I.S.    : Array transaksi mungkin kosong atau memiliki beberapa data awal.
+ *            User belum memasukkan data transaksi baru.
+ *  F.S.    : Array transaksi bertambah sejumlah jumlahInputTransaksi.
+ *            Setiap transaksi memiliki ID otomatis, tanggal valid, jenis valid,
+ *            pos anggaran valid, nominal valid, dan deskripsi terisi.
+ **/
 void InputTransaksi(Transaksi **transaksi, int *jumlahTransaksi, int jumlahInputTransaksi);
 
-/*Function yang mengembalikan nilai bool. Memvalidasi format tanggal transaksi, tanggal String tanggal dalam format "DD-MM-YYYY".*/
-bool ValidasiTanggal(char tanggal[]);
+/**
+ *  Fungsi ValidasiJenis
+ *  I.S.    : Variabel jenis berisi input dari user.
+ *  F.S.    : Menghasilkan true jika jenis adalah "Pemasukan" atau "Pengeluaran",
+ *            dan false jika selain itu.
+ **/
+bool ValidasiTanggal(const char *tanggal);
 
-/*Function yang mengembalikan nilai bool. Memvalidasi jenis transaksi pemasukan atau pengeluaran .*/
+/**
+ *  Fungsi ValidasiNominal
+ *  I.S.    : User menginput nilai nominal.
+ *  F.S.    : Menghasilkan true jika nominal > 0,
+ *            dan false jika nominal <= 0.
+ **/
 bool ValidasiJenis(char jenis[]);
 
-/*Function yang mengembalikan nilai bool. Memvalidasi nama pos anggaran apakah sesuai dengan data yang ada*/
+/**
+ *  Fungsi ValidasiPos
+ *  I.S.    : daftarPos terdefinisi berisi seluruh pos anggaran.
+ *            namapos merupakan input user.
+ *  F.S.    : Menghasilkan true jika namapos ditemukan di daftarPos,
+ *            dan false jika tidak ditemukan.
+ **/
 bool ValidasiPos(PosAnggaran daftarPos[], int JumlahPos, char namapos[]);
 
-/*Function yang mengembalikan nilai bool. Memvalidasi nominal yang di input apakah nominal tersebut kurang dari 0.*/
+/**
+ *  Fungsi ValidasiTanggal
+ *  I.S.    : tanggal merupakan input user dalam bentuk string.
+ *  F.S.    : Menghasilkan true jika string tanggal tidak kosong,
+ *            dan false jika kosong.
+ **/
 bool ValidasiNominal(int nominal);
 
-/*Procedure yang menampilkan tabel data transaksi*/
+/*	Prosedur ShowTransaksi
+    I.S.	: Data transaksi dari user tersimpat di array record Transaksi
+    F.S.	: Data transaksi dari user muncul di layar
+*/
 void ShowTransaksi(Transaksi transaksi[], int JumlahTransaksi, int pilihanUser);
 
-/*Procedure yang melakukan write data transaksi ke dalam file .txt*/
+/*	Prosedur SaveTransaksi
+    I.S.	: Data transaksi dari user belum tersimpan di file eksternal
+    F.S.	: Data transaksi dari user sudah tersimpan di file eksternal
+*/
 void SaveTransaksi(Transaksi transaksi[], int JumlahTransaksi);
 
 #endif

@@ -11,13 +11,24 @@ int jumlahPengeluaran = 0;
 int totalPengeluaran = 0;
 int jumlahPemasukan = 0;
 int totalPemasukan = 0;
-float saldo = 0;
+int saldo = 0;
 float rataRata = 0;
 float persentaseSisa = 0;
 char statusKondisiKeuangan[20];
 char kesimpulanKondisiKeuangan[100];
 
-LaporanPosAnggaran *laporanPosAnggaran;
+typedef struct
+{
+    char namaAnggaran[50];
+    int batasNominal;
+    int realisasi;
+    int sisaNominal;
+    int jumlah;
+    char statusSisa[20];
+} LaporanPosAnggaran;
+
+LaporanPosAnggaran *laporanPosAnggaran = NULL;
+;
 /*
  * Fungsi JumlahTransPemasukan
  * ---------------------------------------------------------
@@ -76,6 +87,8 @@ int TotalPemasukan(Transaksi transaksi[], int jumlahTransaksi)
         if (strcasecmp(transaksi[i].jenis, "Pemasukan") == 0)
             total += transaksi[i].nominal;
     }
+    printf("Total Pemasukan: %d\n", total);
+
     return total;
 }
 
@@ -95,6 +108,7 @@ int TotalPengeluaran(Transaksi transaksi[], int jumlahTransaksi)
         if (strcasecmp(transaksi[i].jenis, "Pengeluaran") == 0)
             total += transaksi[i].nominal;
     }
+    printf("Total Pengeluaran: %d\n", total);
     return total;
 }
 
@@ -105,10 +119,9 @@ int TotalPengeluaran(Transaksi transaksi[], int jumlahTransaksi)
  * F.S.  : Mengembalikan selisih antara total pemasukan dan
  *         total pengeluaran.
  */
-int Saldo(Transaksi transaksi[], int jumlahTransaksi)
+int Saldo(int totalPemasukan, int totalPengeluaran)
 {
-    int saldo = TotalPemasukan(transaksi, jumlahTransaksi) -
-                TotalPengeluaran(transaksi, jumlahTransaksi);
+    int saldo = totalPemasukan - totalPengeluaran;
     return saldo;
 }
 
@@ -158,18 +171,24 @@ float PersentaseSisa(int saldo, int totalPemasukan)
  */
 char *KondisiKeuangan(int saldo)
 {
-    if (saldo < 0)
+    if (saldo < -10)
     {
-        return "DEFISIT";
+        return "DEFISIT BESAR";
     }
-    else if (saldo == 0)
+    else if (saldo < 0)
     {
-        return "SEIMBANG";
+        return "DEFISIT RINGAN";
     }
-    else
+    else if (saldo > 25)
     {
         return "SURPLUS";
     }
+    else if (saldo > 0)
+    {
+        return "SURPLUS KECIL";
+    }
+
+    return "SEIMBANG";
 }
 
 /*
@@ -184,7 +203,15 @@ char *KondisiKeuangan(int saldo)
  */
 char *KesimpulanKondisiKeuangan(int persentase)
 {
-    if (persentase > 25.0)
+    if (persentase < -10.0)
+    {
+        return "Kondisi keuangan kurang sehat. Kurangi pengeluaran dan cari tambahan pemasukan.";
+    }
+    else if (persentase < 0.0)
+    {
+        return "Anda mulai boros, perhatikan pengeluaran harian.";
+    }
+    else if (persentase > 25.0)
     {
         return "Anda termasuk mahasiswa hemat dan produktif.";
     }
@@ -192,17 +219,14 @@ char *KesimpulanKondisiKeuangan(int persentase)
     {
         return "Keuangan Anda seimbang, tetap waspada terhadap pengeluaran tidak perlu.";
     }
-    else if (persentase < 0.0)
-    {
-        return "Anda mulai boros, perhatikan pengeluaran harian.";
-    }
     else
     {
-        return "Kondisi keuangan kurang sehat. Kurangi pengeluaran dan cari tambahan pemasukan.";
+        return "Keuangan Anda berada pada titik netral.";
     }
 }
 
 /*  Fungsi RealisasiPos
+   ---------------------------------------------------------
     Menghitung total nominal transaksi pengekuaran per satu pos anggaran
     I.S.	: Data yang tersimpan di dalam array transaksi
     F.S.	: Mengembalikan total nominal transaksi pengeluaran per pos anggaran
@@ -221,8 +245,8 @@ int RealisasiPos(Transaksi transaksi[], int jumlahTransaksi, char namaPos[])
     return total;
 }
 
-// Fungsi JumlahTransPerPos
-/*	Menghitung jumlah transaksi per satu pos anggaran
+/*	Fungsi JumlahTransPerPos
+ * ---------------------------------------------------------
     I.S.	: Jumlah Transaksi per pos anggaran belum diketahuui
     F.S.	: Mengembalikan jumlah transaksi per pos anggaran
 */
@@ -240,6 +264,7 @@ int JumlahTransPerPos(Transaksi transaksi[], int jumlahTransaksi, char namaPos[]
 }
 
 /*	Fungsi StatusPos
+ * ---------------------------------------------------------
     I.S.	: Status pos belum diketaui
     F.S.	: Status pos sudah diketaui dan dikembalikan nilai nya
 */
@@ -253,17 +278,20 @@ char *StatusPos(int sisa)
 }
 
 /* Prosedur AnalisisLaporanKeuangan
+ * ---------------------------------------------------------
     I.S.	: Hasil analisis keuangan belum di manipulasi dari hasil transaksi mahasiswa
               dan belum dimasukan ke dalam struct
     F.S.	: Hasil analisis keuangan sudah di manipulasi
 */
 void AnalisisLaporanKeuangan(PosAnggaran pos[], int jumlahPos, Transaksi transaksi[], int jumlahTransaksi)
 {
+
     totalPemasukan = TotalPemasukan(transaksi, jumlahTransaksi);
     jumlahPemasukan = JumlahTransPemasukan(transaksi, jumlahTransaksi);
     totalPengeluaran = TotalPengeluaran(transaksi, jumlahTransaksi);
     jumlahPengeluaran = JumlahTransPengeluaran(transaksi, jumlahTransaksi);
-    saldo = totalPemasukan - totalPengeluaran;
+    saldo = Saldo(totalPemasukan, totalPengeluaran);
+    printf("Saldo: %d\n", saldo);
     rataRata = RataRata(transaksi, jumlahTransaksi);
     persentaseSisa = PersentaseSisa(saldo, totalPemasukan);
 
@@ -285,43 +313,86 @@ void AnalisisLaporanKeuangan(PosAnggaran pos[], int jumlahPos, Transaksi transak
 
 /**
  * Prosedur ShowLaporanKeuangan
+ * ---------------------------------------------------------
  * I.S.	: Hasil laporan keuangan mahassiswa belum muncul ke layar
  * F.S.	: Hasil laporan keuangan mahassiswa sudah muncul ke layar
  */
-void ShowLaporanKeuangan(PosAnggaran pos[], int jumlahPos, Transaksi transaksi[], int jumlahTransaksi)
+void ShowLaporanKeuangan()
 {
-    printf("\n============================ LAPORAN KEUANGAN BULANAN ============================\n");
+    // const char *namaBulan[12] = {
+    //     "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+    //     "Juli", "Agustus", "September", "Oktober", "November", "Desember"};
+    printf("\n======================================= LAPORAN KEUANGAN BULANAN ========================================\n");
+    printf("----------------------------------------------------------------------------------------------------------\n");
+
     printf("Total Pemasukan   (%d Transaksi)  : Rp. %d\n",
            jumlahPemasukan, totalPemasukan);
     printf("Total Pengeluaran (%d Transaksi)  : Rp. %d\n",
            jumlahPengeluaran, totalPengeluaran);
     printf("Saldo Akhir                      : Rp. %d\n", saldo);
-    printf("Rata-rata Pengeluaran            : Rp. %d\n", rataRata);
+    printf("Rata-rata Pengeluaran            : Rp. %.2f\n", rataRata);
     printf("----------------------------------------------------------------------------------\n");
 
     printf("\nLaporan Pos Anggaran:\n");
-    printf("__________________________________________________________________________________________________________\n");
-    printf("| %-15s | %-15s | %-15s | %-15s | %-17s | %-10s |\n",
+    printf("____________________________________________________________________________________________________________________\n");
+    printf("| %-15s | %-15s | %-15s | %-15s | %-17s | %-20s |\n",
            "Pos", "Batas Nominal", "Realisasi", "Sisa", "Jumlah Transaksi", "Status");
-    printf("|_________________|_________________|_________________|_________________|___________________|____________|\n");
+    printf("|_________________|_________________|_________________|_________________|___________________|______________________|\n");
 
     for (int i = 0; i < jumlahPos; i++)
     {
-
-        int realisasi = RealisasiPos(transaksi, jumlahTransaksi, pos[i].namaAnggaran);
-        int sisa = pos[i].batasNominal - realisasi;
-        int jumlah = JumlahTransPerPos(transaksi, jumlahTransaksi, pos[i].namaAnggaran);
-
-        printf("| %-15s | %-15d | %-15d | %-15d | %-17d | %-10s |\n",
-               pos[i].namaAnggaran,
-               pos[i].batasNominal,
-               realisasi,
-               sisa,
-               jumlah,
-               StatusPos(sisa));
+        printf("| %-15s | %-15d | %-15d | %-15d | %-17d | %-20s |\n",
+               laporanPosAnggaran[i].namaAnggaran,
+               laporanPosAnggaran[i].batasNominal,
+               laporanPosAnggaran[i].realisasi,
+               laporanPosAnggaran[i].sisaNominal,
+               laporanPosAnggaran[i].jumlah,
+               laporanPosAnggaran[i].statusSisa);
     }
 
-    printf("|_________________|_________________|_________________|_________________|___________________|____________|\n");
+    printf("|_________________|_________________|_________________|_________________|___________________|______________________|\n");
+
+    printf("\n----------------------------------------------------------------------------------\n");
+    printf("Kondisi Keuangan  : %s (Sisa %.2f (persen) dari total pemasukan)\n", statusKondisiKeuangan, persentaseSisa);
+    printf("Kesimpulan        : %s\n", kesimpulanKondisiKeuangan);
+}
+
+void ShowLaporanPerBulan(int bulanCari, int tahunCari)
+{
+    const char *namaBulan[12] = {
+        "JANUARI", "FEBRUARI", "MARET", "APRIL", "MEI", "JUNI",
+        "JULI", "AGUSTUS", "SEPTEMBER", "OKTOBER", "NOVEMBER", "DESEMBER"};
+
+    printf("\n======================================= LAPORAN KEUANGAN %s ========================================\n", namaBulan[bulanCari - 1]);
+    printf("Periode Laporan   : %s %d\n", namaBulan[bulanCari - 1], tahunCari);
+    printf("----------------------------------------------------------------------------------------------------------\n");
+
+    printf("Total Pemasukan   (%d Transaksi)  : Rp. %d\n",
+           jumlahPemasukan, totalPemasukan);
+    printf("Total Pengeluaran (%d Transaksi)  : Rp. %d\n",
+           jumlahPengeluaran, totalPengeluaran);
+    printf("Saldo Akhir                      : Rp. %d\n", saldo);
+    printf("Rata-rata Pengeluaran            : Rp. %.2f\n", rataRata);
+    printf("----------------------------------------------------------------------------------\n");
+
+    printf("\nLaporan Pos Anggaran:\n");
+    printf("____________________________________________________________________________________________________________________\n");
+    printf("| %-15s | %-15s | %-15s | %-15s | %-17s | %-20s |\n",
+           "Pos", "Batas Nominal", "Realisasi", "Sisa", "Jumlah Transaksi", "Status");
+    printf("|_________________|_________________|_________________|_________________|___________________|______________________|\n");
+
+    for (int i = 0; i < jumlahPos; i++)
+    {
+        printf("| %-15s | %-15d | %-15d | %-15d | %-17d | %-20s |\n",
+               laporanPosAnggaran[i].namaAnggaran,
+               laporanPosAnggaran[i].batasNominal,
+               laporanPosAnggaran[i].realisasi,
+               laporanPosAnggaran[i].sisaNominal,
+               laporanPosAnggaran[i].jumlah,
+               laporanPosAnggaran[i].statusSisa);
+    }
+
+    printf("|_________________|_________________|_________________|_________________|___________________|______________________|\n");
 
     printf("\n----------------------------------------------------------------------------------\n");
     printf("Kondisi Keuangan  : %s (Sisa %.2f (persen) dari total pemasukan)\n", statusKondisiKeuangan, persentaseSisa);
