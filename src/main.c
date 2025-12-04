@@ -11,13 +11,56 @@ int jumlahTransaksi = 0;
 PosAnggaran *Pos = NULL;
 int jumlahPos = 0;
 void Loading();
+/**
+ * Fungsi main
+ * Author : Muhammad Zidane Ramadhan Oktaviantoro (251524058)
+ * ------------------------------------------
+ * I.S.  : Program belum dijalankan.
+ * F.S.  : Seluruh data Pos Anggaran dan Transaksi dimuat (load),
+ *         kemudian program menampilkan menu utama.
+ */
 void menu();
+/**
+ * Procedure Display Menu
+ * ------------------------------------------
+ * I.S.  : -.
+ * F.S.  : Menampilkan daftar menu utama secara berulang hingga user memilih exit (0).
+ */
 void DisplayMenu();
+/**
+ *  Procedure MenuPosAnggaran
+ *  Melakukan read data dari file ke pos anggaran
+ *  I.S	: -
+ *  F.S	: Menampilkan menu Pos Anggaran secara berulang
+ **/
 void MenuPosAnggaran();
-/*Procedure yang akan menampilkan daftar menu transaksi.*/
+/**
+ * Procedure Display Menu
+ * ------------------------------------------
+ * I.S.  : -.
+ * F.S.  : Menampilkan daftar menu utama secara berulang hingga user memilih exit (0).
+ */
 void DisplayMenuTransaksi();
+/**
+ *  Prosedur MenuTransaksi
+ *  Author : Firliana Febrina (251524044)
+ *  I.S.	: Laporan Keuanngan pilihan user belum muncul ke layar
+ *  F.S.	: Laporan Keuangan pilihan user sudah muncul ke layar
+ **/
 void MenuTransaksi();
+/**
+ * Procedure Display Laporan Keuangan
+ * ------------------------------------------
+ * I.S.  : -.
+ * F.S.  : Menampilkan daftar menu utama secara berulang hingga user memilih exit (0).
+ */
 void DisplayMenuLaporanKeuangan();
+/**
+ *  Prosedur MenuLaporanKeuangan
+ *  Author : Abhidal Muhammad Gazza (251524032)
+ *  I.S.	: Laporan Keuanngan pilihan user belum muncul ke layar
+ *  F.S.	: Laporan Keuangan pilihan user sudah muncul ke layar
+ **/
 void MenuLaporanKeuangan();
 
 /**
@@ -298,7 +341,6 @@ void Alert()
 {
     Sleep(200); // Windows
     printf("\n\033[93mPilihan tidak valid. Pilih menu yang benar!\033[0m\n");
-    // printf("\n\033[93mMenambah data\033[0m");
     fflush(stdout);
     Sleep(1000); // Windows
     printf("\n");

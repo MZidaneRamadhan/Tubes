@@ -128,6 +128,13 @@ void AnalisisLaporanKeuangan(PosAnggaran pos[], int jumlahPos, Transaksi transak
  * F.S.	: Hasil laporan keuangan mahassiswa sudah muncul ke layar
  */
 void ShowLaporanKeuangan();
+
+/**
+ * Prosedur ShowLaporanPerBulan
+ * ---------------------------------------------------------
+ * I.S.	: Hasil laporan keuangan mahassiswa per bulan dipilih belum muncul ke layar
+ * F.S.	: Hasil laporan keuangan mahassiswa per bulan dipilih sudah muncul ke layar
+ */
 void ShowLaporanPerBulan(int bulanCari, int tahunCari);
 
 #endif

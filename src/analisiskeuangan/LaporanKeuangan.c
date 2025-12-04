@@ -357,6 +357,12 @@ void ShowLaporanKeuangan()
     printf("Kesimpulan        : %s\n", kesimpulanKondisiKeuangan);
 }
 
+/**
+ * Prosedur ShowLaporanPerBulan
+ * ---------------------------------------------------------
+ * I.S.	: Hasil laporan keuangan mahassiswa per bulan dipilih belum muncul ke layar
+ * F.S.	: Hasil laporan keuangan mahassiswa per bulan dipilih sudah muncul ke layar
+ */
 void ShowLaporanPerBulan(int bulanCari, int tahunCari)
 {
     const char *namaBulan[12] = {
